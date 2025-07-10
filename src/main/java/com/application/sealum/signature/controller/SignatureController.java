@@ -2,11 +2,13 @@ package com.application.sealum.signature.controller;
 
 import com.application.sealum.signature.dto.SignatureRequest;
 import com.application.sealum.signature.dto.SignatureResponse;
+import com.application.sealum.signature.dto.VerificationResponse;
 import com.application.sealum.signature.model.Signature;
 import com.application.sealum.signature.service.SignatureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/signatures")
@@ -27,6 +29,15 @@ public class SignatureController {
                     .signedAt(signature.getSignedAt())
                     .build();
 
+            return ResponseEntity.ok(response);
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    public ResponseEntity<?> verifyDocument(@RequestParam("file")MultipartFile file){
+        try {
+            VerificationResponse response = signatureService.verifyUploadedDocument(file);
             return ResponseEntity.ok(response);
         } catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
